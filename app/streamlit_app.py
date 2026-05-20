@@ -17,6 +17,16 @@ st.set_page_config(
 def get_conn():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     db_path = os.path.join(base_dir, 'data', 'ecommerce.duckdb')
+    
+    # If DuckDB doesn't exist, rebuild from CSVs
+    if not os.path.exists(db_path):
+        st.info("Building database on first run — this takes about 30 seconds...")
+        import sys
+        sys.path.append(os.path.join(base_dir, 'src'))
+        from ingest import ingest_all
+        data_dir = os.path.join(base_dir, 'data', 'raw')
+        ingest_all(data_dir, db_path)
+    
     return duckdb.connect(db_path, read_only=True)
 
 conn = get_conn()
