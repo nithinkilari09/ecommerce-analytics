@@ -20,7 +20,6 @@ def get_conn():
     
     # If DuckDB doesn't exist, rebuild from CSVs
     if not os.path.exists(db_path):
-        st.info("Building database on first run — this takes about 30 seconds...")
         import sys
         sys.path.append(os.path.join(base_dir, 'src'))
         from ingest import ingest_all
